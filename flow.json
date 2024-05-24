@@ -1,0 +1,739 @@
+[
+    {
+        "id": "b9b9c84dae25ba01",
+        "type": "tab",
+        "label": "Flux 4",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "343532a9ca231f22",
+        "type": "http request",
+        "z": "b9b9c84dae25ba01",
+        "name": "",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://localhost:8000/predict/",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 370,
+        "y": 320,
+        "wires": [
+            [
+                "c6cec6c620e9ecfa"
+            ]
+        ]
+    },
+    {
+        "id": "29e0b35a9c0e5d9e",
+        "type": "debug",
+        "z": "b9b9c84dae25ba01",
+        "name": "Model prediction",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 720,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "c6cec6c620e9ecfa",
+        "type": "json",
+        "z": "b9b9c84dae25ba01",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 510,
+        "y": 320,
+        "wires": [
+            [
+                "29e0b35a9c0e5d9e",
+                "2033fc7909eb83bd",
+                "acaa7a591d5f66e9",
+                "7b452f7e1b1137f8"
+            ]
+        ]
+    },
+    {
+        "id": "d0495b13a24de276",
+        "type": "function",
+        "z": "b9b9c84dae25ba01",
+        "name": "generate sensor Data",
+        "func": "// Node-RED function to generate data with two decimal places\nmsg.payload = {\n    temperature: parseFloat((Math.random() * 5 + 20).toFixed(2)), // 20 to 25 with two decimals\n    humidity: parseFloat((Math.random() * 20 + 40).toFixed(2)), // 40 to 60 with two decimals\n    light: parseFloat((Math.random() * 300 + 200).toFixed(2)) // 200 to 500 lumens with two decimals\n};\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 240,
+        "y": 200,
+        "wires": [
+            [
+                "8df35cd03a565301",
+                "ca39a1bd055bdf1c",
+                "79b226f7938c9a08",
+                "786810b814d17d02",
+                "343532a9ca231f22"
+            ]
+        ]
+    },
+    {
+        "id": "d0ce65bdc1a369b1",
+        "type": "inject",
+        "z": "b9b9c84dae25ba01",
+        "name": "",
+        "props": [],
+        "repeat": "1800",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 230,
+        "y": 80,
+        "wires": [
+            [
+                "d0495b13a24de276"
+            ]
+        ]
+    },
+    {
+        "id": "8df35cd03a565301",
+        "type": "debug",
+        "z": "b9b9c84dae25ba01",
+        "name": "generated data",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 480,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "786810b814d17d02",
+        "type": "ui_gauge",
+        "z": "b9b9c84dae25ba01",
+        "name": "Temperature",
+        "group": "6a58582b45ed3da9",
+        "order": 1,
+        "width": "5",
+        "height": "3",
+        "gtype": "gage",
+        "title": "Temperature Degree",
+        "label": "",
+        "format": "{{payload.temperature}} °C",
+        "min": "20",
+        "max": "25",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 490,
+        "y": 60,
+        "wires": [],
+        "icon": "font-awesome/fa-thermometer-2"
+    },
+    {
+        "id": "ca39a1bd055bdf1c",
+        "type": "ui_gauge",
+        "z": "b9b9c84dae25ba01",
+        "name": "Humidity",
+        "group": "6a58582b45ed3da9",
+        "order": 2,
+        "width": "5",
+        "height": "3",
+        "gtype": "gage",
+        "title": "Humidity Level",
+        "label": "",
+        "format": "{{payload.humidity}} %",
+        "min": "40",
+        "max": "80",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 480,
+        "y": 100,
+        "wires": [],
+        "icon": "node-red/mongodb.svg"
+    },
+    {
+        "id": "79b226f7938c9a08",
+        "type": "ui_gauge",
+        "z": "b9b9c84dae25ba01",
+        "name": "Light",
+        "group": "6a58582b45ed3da9",
+        "order": 2,
+        "width": "10",
+        "height": "4",
+        "gtype": "compass",
+        "title": "Light Intensity",
+        "label": "",
+        "format": "{{payload.light}} Lux",
+        "min": "200",
+        "max": "500",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 470,
+        "y": 140,
+        "wires": [],
+        "icon": "font-awesome/fa-lightbulb-o"
+    },
+    {
+        "id": "989e4262f33618b1",
+        "type": "mysql",
+        "z": "b9b9c84dae25ba01",
+        "mydb": "612fcf1988cce3a8",
+        "name": "",
+        "x": 920,
+        "y": 480,
+        "wires": [
+            [
+                "aec3140c436f535b"
+            ]
+        ]
+    },
+    {
+        "id": "2033fc7909eb83bd",
+        "type": "function",
+        "z": "b9b9c84dae25ba01",
+        "name": "save to database",
+        "func": "// Extract data from the input message\nvar timestamp = new Date(); // Current timestamp\nvar temperature = msg.payload.temp;\nvar humidity = msg.payload.humidity;\nvar light = msg.payload.light;\nvar predictedLight = msg.payload.predicted_light;\nvar predictedWater = msg.payload.predicted_water;\n\n// Construct the SQL query\nvar query = \"INSERT INTO greenhouse_data (time, temperature, humidity, light, predicted_light, predicted_water) VALUES ('\"\n    + timestamp.toISOString().slice(0, 19).replace('T', ' ') + \"', \" // Formatting timestamp\n    + temperature + \", \"\n    + humidity + \", \"\n    + light + \", \"\n    + predictedLight + \", \"\n    + predictedWater + \")\";\n\n// Assign the query to msg.topic\nmsg.topic = query;\n\n// Pass the message to the next node (MySQL node)\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 650,
+        "y": 420,
+        "wires": [
+            [
+                "989e4262f33618b1",
+                "56a39835bf7edfc4"
+            ]
+        ]
+    },
+    {
+        "id": "56a39835bf7edfc4",
+        "type": "debug",
+        "z": "b9b9c84dae25ba01",
+        "name": "model Input and Output saved to Database",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1010,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "51892e965a7b795a",
+        "type": "mqtt in",
+        "z": "b9b9c84dae25ba01",
+        "name": "",
+        "topic": "greenhouse",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "b0de5f7f8b095d4a",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 170,
+        "y": 320,
+        "wires": [
+            [
+                "35eaa77ec752b9b0",
+                "343532a9ca231f22"
+            ]
+        ]
+    },
+    {
+        "id": "35eaa77ec752b9b0",
+        "type": "debug",
+        "z": "b9b9c84dae25ba01",
+        "name": "Published Data from MQTT",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 360,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "acaa7a591d5f66e9",
+        "type": "function",
+        "z": "b9b9c84dae25ba01",
+        "name": "Send data to water actuator",
+        "func": "var predictedLight = msg.payload.predicted_light;\n\nmsg.payload = predictedLight;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 740,
+        "y": 200,
+        "wires": [
+            [
+                "5fdbdd35ef586868"
+            ]
+        ]
+    },
+    {
+        "id": "7b452f7e1b1137f8",
+        "type": "function",
+        "z": "b9b9c84dae25ba01",
+        "name": "Send data to water actuator",
+        "func": "var predictedWater = msg.payload.predicted_water;\n\nmsg.payload = predictedWater;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 740,
+        "y": 260,
+        "wires": [
+            [
+                "d2b957497adc630a"
+            ]
+        ]
+    },
+    {
+        "id": "d2b957497adc630a",
+        "type": "mqtt out",
+        "z": "b9b9c84dae25ba01",
+        "name": "",
+        "topic": "greenhouse/water",
+        "qos": "0",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "b0de5f7f8b095d4a",
+        "x": 1010,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "5fdbdd35ef586868",
+        "type": "mqtt out",
+        "z": "b9b9c84dae25ba01",
+        "name": "",
+        "topic": "greenhouse/light",
+        "qos": "0",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "b0de5f7f8b095d4a",
+        "x": 1010,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "c16c551de05061d9",
+        "type": "function",
+        "z": "b9b9c84dae25ba01",
+        "name": "read from database",
+        "func": "\nvar query = \"SELECT * FROM greenhouse_data\"\n\nmsg.topic = query;\n\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 710,
+        "y": 520,
+        "wires": [
+            [
+                "989e4262f33618b1"
+            ]
+        ]
+    },
+    {
+        "id": "fc225ca1cfa3294c",
+        "type": "inject",
+        "z": "b9b9c84dae25ba01",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 640,
+        "y": 620,
+        "wires": [
+            [
+                "c16c551de05061d9"
+            ]
+        ]
+    },
+    {
+        "id": "aec3140c436f535b",
+        "type": "json",
+        "z": "b9b9c84dae25ba01",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 1030,
+        "y": 540,
+        "wires": [
+            [
+                "9add60faba08f362",
+                "3edf8e1ea0d299b0",
+                "b641afbdc474de15",
+                "db0119d9adf0fa5b"
+            ]
+        ]
+    },
+    {
+        "id": "9add60faba08f362",
+        "type": "debug",
+        "z": "b9b9c84dae25ba01",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1240,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "70acf6991727a6e3",
+        "type": "ui_chart",
+        "z": "b9b9c84dae25ba01",
+        "name": "",
+        "group": "40b4ab8a5b807796",
+        "order": 0,
+        "width": "5",
+        "height": "3",
+        "label": "Tempurature",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1290,
+        "y": 620,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3edf8e1ea0d299b0",
+        "type": "function",
+        "z": "b9b9c84dae25ba01",
+        "name": "function 2",
+        "func": "// Parse the input JSON string to an array of objects\nvar inputData = JSON.parse(msg.payload);\n\n// Extracting necessary fields and converting time strings to Date objects\nvar data = inputData.map(function(entry) {\n    return {\n        time: new Date(entry.time),\n        temperature: entry.temperature,\n        humidity: entry.humidity,\n        light: entry.light\n    };\n});\n\n// Filtering out entries with invalid time values\ndata = data.filter(function(entry) {\n    return !isNaN(entry.time.getTime());\n});\n\n// Sorting data by time\ndata.sort(function(a, b) {\n    return a.time - b.time;\n});\n\n// Formatting data for chart\nvar chartData = [\n    {\n        series: ['Temperature'],\n        data: [data.map(function(entry) { return { x: entry.time, y: entry.temperature }; })]\n    }\n];\n\nmsg.payload = chartData;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1060,
+        "y": 620,
+        "wires": [
+            [
+                "70acf6991727a6e3"
+            ]
+        ]
+    },
+    {
+        "id": "b641afbdc474de15",
+        "type": "function",
+        "z": "b9b9c84dae25ba01",
+        "name": "function 3",
+        "func": "// Parse the input JSON string to an array of objects\nvar inputData = JSON.parse(msg.payload);\n\n// Extracting necessary fields and converting time strings to Date objects\nvar data = inputData.map(function(entry) {\n    return {\n        time: new Date(entry.time),\n        temperature: entry.temperature,\n        humidity: entry.humidity,\n        light: entry.light\n    };\n});\n\n// Filtering out entries with invalid time values\ndata = data.filter(function(entry) {\n    return !isNaN(entry.time.getTime());\n});\n\n// Sorting data by time\ndata.sort(function(a, b) {\n    return a.time - b.time;\n});\n\n// Formatting data for chart\nvar chartData = [\n    {\n        series: ['Humidity'],\n        data: [data.map(function(entry) { return { x: entry.time, y: entry.humidity }; })]\n    }\n];\n\nmsg.payload = chartData;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 980,
+        "y": 660,
+        "wires": [
+            [
+                "c1a0c2072fbcb472"
+            ]
+        ]
+    },
+    {
+        "id": "db0119d9adf0fa5b",
+        "type": "function",
+        "z": "b9b9c84dae25ba01",
+        "name": "function 4",
+        "func": "// Parse the input JSON string to an array of objects\nvar inputData = JSON.parse(msg.payload);\n\n// Extracting necessary fields and converting time strings to Date objects\nvar data = inputData.map(function(entry) {\n    return {\n        time: new Date(entry.time),\n        temperature: entry.temperature,\n        humidity: entry.humidity,\n        light: entry.light\n    };\n});\n\n// Filtering out entries with invalid time values\ndata = data.filter(function(entry) {\n    return !isNaN(entry.time.getTime());\n});\n\n// Sorting data by time\ndata.sort(function(a, b) {\n    return a.time - b.time;\n});\n\n// Formatting data for chart\nvar chartData = [\n    {\n        series: ['Light'],\n        data: [data.map(function(entry) { return { x: entry.time, y: entry.light }; })]\n    }\n];\n\nmsg.payload = chartData;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 940,
+        "y": 700,
+        "wires": [
+            [
+                "0f216883a03441f6"
+            ]
+        ]
+    },
+    {
+        "id": "c1a0c2072fbcb472",
+        "type": "ui_chart",
+        "z": "b9b9c84dae25ba01",
+        "name": "",
+        "group": "40b4ab8a5b807796",
+        "order": 0,
+        "width": "5",
+        "height": "3",
+        "label": "Humidity",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1240,
+        "y": 660,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0f216883a03441f6",
+        "type": "ui_chart",
+        "z": "b9b9c84dae25ba01",
+        "name": "",
+        "group": "40b4ab8a5b807796",
+        "order": 0,
+        "width": "10",
+        "height": "4",
+        "label": "Light",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1190,
+        "y": 700,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6a58582b45ed3da9",
+        "type": "ui_group",
+        "name": "",
+        "tab": "030a6297bb079a00",
+        "order": 1,
+        "disp": true,
+        "width": "10",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "612fcf1988cce3a8",
+        "type": "MySQLdatabase",
+        "name": "greenhouse_database",
+        "host": "127.0.0.1",
+        "port": "3306",
+        "db": "greenhouse",
+        "tz": "",
+        "charset": "UTF8"
+    },
+    {
+        "id": "b0de5f7f8b095d4a",
+        "type": "mqtt-broker",
+        "name": "Local MQTT Broker",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "compatmode": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": null,
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": null,
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": null,
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "40b4ab8a5b807796",
+        "type": "ui_group",
+        "name": "Inputs in function of time",
+        "tab": "11",
+        "order": 2,
+        "disp": true,
+        "width": "10",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "030a6297bb079a00",
+        "type": "ui_tab",
+        "name": "Green House",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "11",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "order": 1
+    }
+]
